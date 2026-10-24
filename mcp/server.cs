@@ -15,12 +15,12 @@ builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogL
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
-    .WithToolsFromAssembly();
+    .WithTools<SampleTools>();
 
 await builder.Build().RunAsync();
 
 [McpServerToolType]
-public static class SampleTools
+public sealed class SampleTools
 {
     [McpServerTool(Name = "echo"), Description("Returns the message you send.")]
     public static string Echo([Description("Any text.")] string message) => $"You said: {message}";

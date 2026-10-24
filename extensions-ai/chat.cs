@@ -9,7 +9,7 @@ using OllamaSharp;
 IChatClient client = new OllamaApiClient(new Uri("http://localhost:11434"), "qwen2.5:7b-instruct");
 
 // One question, one answer.
-var response = await client.GetResponseAsync("In one sentence, what is the Model Context Protocol?");
+var response = await client.GetResponseAsync("In one sentence, what does the await keyword do in C#?");
 Console.WriteLine(response.Text);
 Console.WriteLine();
 
