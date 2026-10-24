@@ -15,9 +15,13 @@ builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogL
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
-    .WithTools<SampleTools>();
+    .WithTools<SampleTools>()
+    .WithResources<SampleResources>()
+    .WithPrompts<SamplePrompts>();
 
 await builder.Build().RunAsync();
+
+// Tools are actions the model can run.
 
 [McpServerToolType]
 public sealed class SampleTools
@@ -32,4 +36,22 @@ public sealed class SampleTools
 
     [McpServerTool(Name = "utc_now"), Description("Returns the current UTC date and time in ISO 8601 format.")]
     public static string UtcNow() => DateTimeOffset.UtcNow.ToString("O");
+}
+
+// Resources are data the client can read, each one under a URI.
+[McpServerResourceType]
+public sealed class SampleResources
+{
+    [McpServerResource(UriTemplate = "notes://office-hours", Name = "office_hours", MimeType = "text/plain")]
+    [Description("When the office is open.")]
+    public static string OfficeHours() => "Monday to Friday, 9:00 to 18:00. Closed on public holidays.";
+}
+
+// Prompts are ready-made instructions the client can fill in and send to its model.
+[McpServerPromptType]
+public sealed class SamplePrompts
+{
+    [McpServerPrompt(Name = "summarize"), Description("Asks for a one-sentence summary of a text.")]
+    public static string Summarize([Description("The text to summarize.")] string text) =>
+        $"Summarize the following text in one sentence:\n\n{text}";
 }
